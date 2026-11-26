@@ -19,7 +19,7 @@ class ProfileController extends Controller
 
         $data = $request->validate([
             'name' => ['required', 'string', 'max:100'],
-            'email' => ['required', 'email', 'max:255', Rule::unique('users')->ignore($user->id)],
+            'email' => ['required', 'string', 'max:255', Rule::when($request->input('email') !== $user->email, ['email']), Rule::unique('users')->ignore($user->id)],
             'phone' => ['nullable', 'string', 'max:20'],
             'current_password' => ['nullable', 'required_with:password', 'current_password'],
             'password' => ['nullable', 'confirmed', Password::min(8)],

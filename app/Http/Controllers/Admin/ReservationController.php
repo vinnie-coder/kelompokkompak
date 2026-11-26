@@ -54,7 +54,7 @@ class ReservationController extends Controller
         return back()->with('success', 'Pesanan ditolak.');
     }
 
-        public function complete(Request $request, Reservation $reservation)
+    public function complete(Request $request, Reservation $reservation)
     {
         // Nominal denda tidak diterima dari form, hanya jumlah jam kelebihan
         $data = $request->validate([
@@ -66,6 +66,7 @@ class ReservationController extends Controller
 
         return back()->with('success', 'Reservasi diselesaikan. Denda, poin user, dan jam pakai lapangan diperbarui.');
     }
+
     public function destroy(Reservation $reservation)
     {
         $removable = $reservation->type === 'maintenance'

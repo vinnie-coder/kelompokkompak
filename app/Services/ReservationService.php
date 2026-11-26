@@ -168,7 +168,7 @@ class ReservationService
      * Menyelesaikan reservasi mengubah 3 tabel sekaligus:
      * reservations (status & denda), users (poin), courts (total jam terpakai).
      */
-        public function complete(Reservation $reservation, int $overtimeHours = 0, ?string $note = null): void
+    public function complete(Reservation $reservation, int $overtimeHours = 0, ?string $note = null): void
     {
         DB::transaction(function () use ($reservation, $overtimeHours, $note) {
             $court = Court::whereKey($reservation->court_id)->lockForUpdate()->firstOrFail();

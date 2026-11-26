@@ -7,7 +7,7 @@
             <h1 class="h4 mb-3">Profil Saya</h1>
             <form method="POST" action="{{ route('profile.update') }}">
                 @csrf @method('PUT')
-                @foreach ([['name', 'Nama', 'text'], ['email', 'Email', 'email'], ['phone', 'Nomor HP', 'text']] as [$field, $label, $type])
+                @foreach ([['name', 'Nama', 'text'], ['email', 'Email', 'text'], ['phone', 'Nomor HP', 'text']] as [$field, $label, $type])
                     <div class="mb-3">
                         <label class="form-label" for="{{ $field }}">{{ $label }}</label>
                         <input class="form-control" type="{{ $type }}" id="{{ $field }}" name="{{ $field }}" value="{{ old($field, $user->$field) }}">
