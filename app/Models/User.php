@@ -29,6 +29,12 @@ class User extends Authenticatable
         return $this->hasMany(Reservation::class);
     }
 
+    /** Reservasi yang diverifikasi oleh user ini (khusus admin) */
+    public function verifiedReservations(): HasMany
+    {
+        return $this->hasMany(Reservation::class, 'verified_by');
+    }
+
     public function isAdmin(): bool
     {
         return $this->role === 'admin';

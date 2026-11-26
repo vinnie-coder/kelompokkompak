@@ -9,8 +9,8 @@
             <form method="POST" action="{{ route('login') }}">
                 @csrf
                 <div class="mb-3">
-                    <label class="form-label" for="email">Email</label>
-                    <input class="form-control" type="email" id="email" name="email" value="{{ old('email') }}" required autofocus>
+                    <label class="form-label" for="email">Email / Username</label>
+                    <input class="form-control" type="text" id="email" name="email" autocomplete="username" value="{{ old('email') }}" required autofocus>
                 </div>
                 <div class="mb-3">
                     <label class="form-label" for="password">Password</label>

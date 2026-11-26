@@ -13,10 +13,11 @@ class DatabaseSeeder extends Seeder
 {
     public function run(): void
     {
-        $admin = $this->makeUser('Admin Lapangan', 'admin@example.com', 'admin');
-        $budi = $this->makeUser('Budi Santoso', 'budi@example.com', 'user');
-        $sari = $this->makeUser('Sari Wulandari', 'sari@example.com', 'user');
-                $futsal = SportCategory::create(['name' => 'Futsal', 'description' => 'Lapangan futsal indoor dan outdoor.']);
+        $admin = $this->makeUser('Admin', 'admin', 'admin', '123');
+        $user1 = $this->makeUser('User 1', 'user1', 'user', '321');
+        $user2 = $this->makeUser('User 2', 'user2', 'user', '231');
+
+        $futsal = SportCategory::create(['name' => 'Futsal', 'description' => 'Lapangan futsal indoor dan outdoor.']);
         $padel = SportCategory::create(['name' => 'Padel', 'description' => 'Lapangan padel berdinding kaca.']);
 
         $courts = collect([
@@ -41,12 +42,12 @@ class DatabaseSeeder extends Seeder
         ));
 
         // [user, lapangan, selisih hari, jam mulai, jam selesai, status]
-                $samples = [
-            [$budi, $courts[1], -3, 18, 20, 'completed'],
-            [$sari, $courts[0], -1, 19, 21, 'approved'],
-            [$budi, $courts[0], 1, 16, 18, 'pending'],
-            [$sari, $courts[1], 2, 9, 10, 'pending'],
-            [$budi, $courts[2], 3, 15, 17, 'approved'],
+        $samples = [
+            [$user1, $courts[1], -3, 18, 20, 'completed'],
+            [$user2, $courts[0], -1, 19, 21, 'approved'],
+            [$user1, $courts[0], 1, 16, 18, 'pending'],
+            [$user2, $courts[1], 2, 9, 10, 'pending'],
+            [$user1, $courts[2], 3, 15, 17, 'approved'],
         ];
 
         foreach ($samples as $i => [$user, $court, $offset, $start, $end, $status]) {
@@ -83,9 +84,9 @@ class DatabaseSeeder extends Seeder
         Storage::disk('public')->delete($proof);
     }
 
-    private function makeUser(string $name, string $email, string $role): User
+    private function makeUser(string $name, string $email, string $role, string $password): User
     {
-        $user = new User(['name' => $name, 'email' => $email, 'password' => 'password', 'phone' => '081234567890']);
+        $user = new User(['name' => $name, 'email' => $email, 'password' => $password, 'phone' => '081234567890']);
         $user->role = $role;
         $user->save();
 

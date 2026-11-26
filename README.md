@@ -61,6 +61,7 @@ erDiagram
 | SportCategory → Court | `hasMany` / `belongsTo` |
 | Court → Reservation | `hasMany` / `belongsTo` |
 | Reservation → User (verifikator) | `belongsTo` lewat `verified_by` |
+| User → Reservation (yang diverifikasi) | `hasMany` lewat `verified_by` (`verifiedReservations`) |
 
 ## Instalasi
 
@@ -70,11 +71,11 @@ Kebutuhan: PHP 8.2+, Composer, dan SQLite atau MySQL/MariaDB.
 git clone <url-repository>
 cd <nama-folder>
 composer install
-cp .env.example .env          # Windows CMD: copy .env.example .env
+cp .env.example .env          # Windows PowerShell/CMD: copy .env.example .env
 php artisan key:generate
 ```
 
-Atur database di `.env`. Untuk MySQL (XAMPP/Laragon), buat database `reservasi_lapangan` lalu isi:
+`.env.example` sudah diatur untuk MySQL. Untuk XAMPP/Laragon, buat dulu database `reservasi_lapangan` (collation `utf8mb4_unicode_ci`), lalu pastikan `.env` berisi:
 
 ```env
 DB_CONNECTION=mysql
@@ -85,7 +86,7 @@ DB_USERNAME=root
 DB_PASSWORD=
 ```
 
-Untuk SQLite cukup `DB_CONNECTION=sqlite` (jawab *yes* jika diminta membuat file database).
+Jika ingin memakai SQLite, ganti menjadi `DB_CONNECTION=sqlite` (jawab *yes* jika diminta membuat file database).
 
 ```bash
 php artisan migrate --seed
@@ -99,9 +100,9 @@ Buka http://127.0.0.1:8000
 
 | Role | Email | Password |
 |---|---|---|
-| Admin | admin@example.com | password |
-| User | budi@example.com | password |
-| User | sari@example.com | password |
+| Admin | admin | 123 |
+| User | user1 | 321 |
+| User | user2 | 231 |
 
 ## Aturan Bisnis
 
@@ -113,6 +114,30 @@ Buka http://127.0.0.1:8000
 - Alur status: `Pending → Approved → Completed`, `Pending → Rejected`, `Pending → Cancelled`.
 - Denda kelebihan main dihitung di server: jam kelebihan x tarif per jam. Admin hanya mengisi jumlah jam.
 - Saat Completed, user mendapat 1 poin per jam dan jam pakai lapangan bertambah.
+
+## Alur Transaksi (`DB::transaction`)
+
+Semua perubahan data reservasi lewat `app/Services/ReservationService.php`. Baris lapangan dikunci
+(`lockForUpdate`) sebelum cek bentrok, sehingga dua orang tidak bisa memesan slot yang sama bersamaan.
+
+| Proses | Tabel yang berubah | Pengaman |
+|---|---|---|
+| Buat reservasi | `reservations` | Validasi jam, durasi, lapangan aktif, bentrok; tarif dihitung server |
+| Ubah / batalkan | `reservations` (+ file bukti) | Hanya pemilik dan hanya status Pending |
+| Setujui | `reservations` | Bukti transfer ada, jadwal belum lewat, tidak bentrok |
+| Tolak | `reservations` | Alasan wajib diisi |
+| Selesaikan | `reservations`, `users` (poin), `courts` (jam terpakai) | 3 tabel diubah atomik; hanya status Approved dan jadwal sudah dimulai |
+| Blokir perawatan | `reservations` (type `maintenance`) | Tidak boleh menimpa pesanan yang sudah ada |
+
+## Kesesuaian dengan Topik No. 2 (Reservasi Lapangan Padel)
+
+| Ketentuan topik | Implementasi |
+|---|---|
+| Cek bentrok slot jam pada lapangan yang dipilih | `ReservationService::hasConflict` |
+| Tarif otomatis dari selisih jam sewa | `prepareSchedule`: `(jam_selesai - jam_mulai) x tarif_per_jam` |
+| User membatalkan selama Pending | `ReservationService::cancel` |
+| Admin memverifikasi bukti transfer | `approve` dan `reject` (butuh bukti transfer) |
+| Admin memblokir jadwal perawatan | `blockMaintenance` (menu Perawatan) |
 
 ## Peta Ketentuan Tugas ke Kode
 
@@ -131,3 +156,9 @@ Buka http://127.0.0.1:8000
 ```bash
 php artisan test
 ```
+
+Tes berjalan di SQLite memori (lihat `phpunit.xml`), jadi data MySQL aman. Berkas tes:
+
+- `tests/Feature/ReservasiTest.php`: tarif, bentrok, perawatan, ownership, role, file lama, alur sampai Completed.
+- `tests/Feature/LogikaBisnisTest.php`: relasi Eloquent, aturan jadwal, lapangan nonaktif, pembatalan, penolakan,
+  penyelesaian tidak valid, perawatan, pencarian/filter, dan pagination.

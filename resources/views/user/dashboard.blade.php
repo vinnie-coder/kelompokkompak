@@ -2,7 +2,7 @@
 @section('title', 'Dashboard')
 @section('content')
 <div class="d-flex justify-content-between mb-3">
-    <h1 class="h4 mb-0">Halo, {{ auth()->user()->name }}</h1>
+    <h1 class="h4 mb-0">Halo, {{ auth()->user()->name }}!</h1>
     <a class="btn btn-primary" href="{{ route('user.reservations.create') }}">Pesan lapangan</a>
 </div>
 <div class="row g-3 mb-4">

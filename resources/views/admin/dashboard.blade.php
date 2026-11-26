@@ -1,7 +1,8 @@
 @extends('layouts.app')
 @section('title', 'Dashboard Admin')
 @section('content')
-<h1 class="h4 mb-3">Dashboard Admin</h1>
+<h1 class="h4 mb-1">Halo, {{ auth()->user()->name }}!</h1>
+<p class="text-muted mb-3">Dashboard Admin</p>
 <div class="row g-3 mb-4">
     @foreach ([
         ['Total user', $stats['users']],
