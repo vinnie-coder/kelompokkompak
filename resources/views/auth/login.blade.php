@@ -4,7 +4,7 @@
 <div class="row justify-content-center">
     <div class="col-md-5">
         <div class="card"><div class="card-body p-4">
-            <h1 class="h4 mb-1">ArenaKu</h1>
+            <h1 class="h4 mb-1">Sportify</h1>
             <p class="text-muted">Reservasi lapangan futsal dan padel</p>
             <form method="POST" action="{{ route('login') }}">
                 @csrf

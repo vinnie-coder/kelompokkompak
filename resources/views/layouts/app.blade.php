@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>@yield('title', 'Reservasi') - ArenaKu</title>
+    <title>@yield('title', 'Reservasi') - Sportify</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
         body { background: #f4f6f8; }
@@ -20,7 +20,7 @@
 @php($admin = auth()->user()->isAdmin())
 <nav class="navbar navbar-expand-lg navbar-dark {{ $admin ? 'navbar-admin' : 'navbar-user' }}">
     <div class="container">
-        <a class="navbar-brand fw-bold" href="{{ route('dashboard') }}">ArenaKu {{ $admin ? '· Admin' : '' }}</a>
+        <a class="navbar-brand fw-bold" href="{{ route('dashboard') }}">Sportify {{ $admin ? '· Admin' : '' }}</a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#menu" aria-label="Menu">
             <span class="navbar-toggler-icon"></span>
         </button>
