@@ -10,7 +10,7 @@ class RoleMiddleware
 {
     public function handle(Request $request, Closure $next, string $role): Response
     {
-        abort_unless($request->user()?->role === $role, 403, 'Anda tidak memiliki akses ke halaman ini.');
+        abort_unless($request->user()?->role === $role, 403, 'Anda tidak memiliki akses ke halaman ini!');
 
         return $next($request);
     }

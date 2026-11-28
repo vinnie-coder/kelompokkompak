@@ -27,11 +27,12 @@ class DatabaseSeeder extends Seeder
             [$futsal, 'Futsal Ahmad', 'Indoor, lantai vinyl.', 120000],
             [$futsal, 'Futsal Temola', 'Indoor, rumput sintetis.', 100000],
             [$futsal, 'Futsal FTI', 'Outdoor, rumput sintetis.', 80000],
-        ])->map(fn (array $c) => Court::create([
+        ])->map(fn (array $c, int $i) => Court::create([
             'sport_category_id' => $c[0]->id,
             'name' => $c[1],
             'description' => $c[2],
             'price_per_hour' => $c[3],
+            'image' => $this->courtImage($i + 1),
             'is_active' => true,
         ]));
 
@@ -82,6 +83,21 @@ class DatabaseSeeder extends Seeder
         }
 
         Storage::disk('public')->delete($proof);
+    }
+
+    /** Salin gambar contoh ke storage. Mengembalikan null jika file tidak ada. */
+    private function courtImage(int $number): ?string
+    {
+        $source = database_path("seeders/images/lapangan-{$number}.jpg");
+
+        if (! file_exists($source)) {
+            return null;
+        }
+
+        $path = "courts/lapangan-{$number}.jpg";
+        Storage::disk('public')->put($path, file_get_contents($source));
+
+        return $path;
     }
 
     private function makeUser(string $name, string $email, string $role, string $password): User

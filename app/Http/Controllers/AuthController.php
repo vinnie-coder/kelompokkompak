@@ -17,12 +17,12 @@ class AuthController extends Controller
     public function login(Request $request)
     {
         $credentials = $request->validate([
-            'email' => ['required', 'string'], // boleh email atau username demo (admin, user)
+            'email' => ['required', 'string'], 
             'password' => ['required', 'string'],
         ]);
 
         if (! Auth::attempt($credentials, $request->boolean('remember'))) {
-            return back()->withErrors(['email' => 'Email atau password salah.'])->onlyInput('email');
+            return back()->withErrors(['email' => 'Email atau password salah!'])->onlyInput('email');
         }
 
         $request->session()->regenerate();
@@ -45,7 +45,7 @@ class AuthController extends Controller
         ]);
 
         $user = new User($data);
-        $user->role = 'user'; // registrasi mandiri selalu menjadi user
+        $user->role = 'user'; 
         $user->save();
 
         Auth::login($user);

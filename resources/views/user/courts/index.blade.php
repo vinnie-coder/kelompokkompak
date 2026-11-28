@@ -5,7 +5,7 @@
 <form class="row g-2 mb-3">
     <div class="col-md-5"><input class="form-control" name="q" value="{{ request('q') }}" placeholder="Cari lapangan"></div>
     <div class="col-md-3">
-        <select class="form-select" name="category">
+        <select class="form-select" name="category" onchange="this.form.submit()">
             <option value="">Semua kategori</option>
             @foreach ($categories as $c)
                 <option value="{{ $c->id }}" @selected(request('category') == $c->id)>{{ $c->name }}</option>

@@ -1,4 +1,4 @@
-# ArenaKu: Sistem Reservasi Lapangan Olahraga (Futsal / Padel)
+# Sportify: Sistem Reservasi Lapangan Olahraga (Futsal / Padel)
 
 Aplikasi web Laravel 12 dengan dua role (Admin dan User), kalkulasi tarif otomatis,
 pengecekan bentrok jadwal, dan transaksi database atomik. Tampilan memakai Bootstrap 5 (CDN),
